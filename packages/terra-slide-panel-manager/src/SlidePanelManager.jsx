@@ -132,7 +132,6 @@ class SlidePanelManager extends React.Component {
             <SlideGroup items={manager.disclosure.components} isAnimated />
           </ContentContainer>
         )}
-        // panelAriaLabel={headerDataForPresentedComponent ? headerDataForPresentedComponent.title : 'aaaaa'}
         panelAriaLabel={ariaRegionMessage}
         mainAriaLabel={mainAriaLabel}
         mainContent={manager.children.components}
