@@ -20,8 +20,17 @@ const propTypes = {
    */
   panelBehavior: PropTypes.oneOf(['overlay', 'squish']),
   /**
+ * The aria label for the panel region.
+  */
+  ariaLabel: PropTypes.string,
+  /**
+  * The aria label when returning to the main region.
+  */
+  mainAriaLabel: PropTypes.string,
+  /**
    * The component to render within the panel above the disclosed content.
    */
+
   disclosureAccessory: PropTypes.element,
   /**
    * @private
@@ -32,6 +41,8 @@ const propTypes = {
 
 const defaultProps = {
   panelBehavior: 'overlay',
+  mainAriaLabel: 'You are back in the main region',
+  // ariaLabel: 'default panel manager aria label',
 };
 
 /**
@@ -62,7 +73,7 @@ class SlidePanelManager extends React.Component {
 
   renderSlidePanel(manager) {
     const {
-      children, disclosureAccessory, withDisclosureContainer, ...customProps
+      children, disclosureAccessory, withDisclosureContainer, ariaLabel, mainAriaLabel, ...customProps
     } = this.props;
 
     let isFullscreen;
@@ -82,6 +93,15 @@ class SlidePanelManager extends React.Component {
     const presentedDisclosureComponentKey = manager.disclosureComponentKeys[manager.disclosureComponentKeys.length - 1];
     const presentedDisclosureComponentData = manager.disclosureComponentData[presentedDisclosureComponentKey] || {};
     const headerDataForPresentedComponent = presentedDisclosureComponentData.headerAdapterData;
+
+    let ariaRegionMessage;
+    if (ariaLabel) {
+      ariaRegionMessage = ariaLabel;
+    } else if (headerDataForPresentedComponent && headerDataForPresentedComponent.title) {
+      ariaRegionMessage = headerDataForPresentedComponent.title;
+    } else {
+      ariaRegionMessage = 'default panel manager aria label';
+    }
 
     return (
       <SlidePanel
@@ -112,6 +132,9 @@ class SlidePanelManager extends React.Component {
             <SlideGroup items={manager.disclosure.components} isAnimated />
           </ContentContainer>
         )}
+        // panelAriaLabel={headerDataForPresentedComponent ? headerDataForPresentedComponent.title : 'aaaaa'}
+        panelAriaLabel={ariaRegionMessage}
+        mainAriaLabel={mainAriaLabel}
         mainContent={manager.children.components}
       />
     );
