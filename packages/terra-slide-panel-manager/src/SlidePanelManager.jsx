@@ -16,11 +16,11 @@ const propTypes = {
    */
   children: PropTypes.node,
   /**
-   * The desired panel behavior. Either 'squish' or 'overlay'.
-   */
+  * The desired panel behavior. Either 'squish' or 'overlay'.
+  */
   panelBehavior: PropTypes.oneOf(['overlay', 'squish']),
   /**
- * The aria label for the panel region.
+  * The aria label for the panel region.
   */
   ariaLabel: PropTypes.string,
   /**
