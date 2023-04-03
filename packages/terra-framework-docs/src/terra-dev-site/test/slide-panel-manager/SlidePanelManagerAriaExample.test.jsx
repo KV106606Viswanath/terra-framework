@@ -276,7 +276,7 @@ ContentComponent.contextType = DisclosureManagerContext;
 
 const SlidePanelManagerExample = () => (
   <div className={cx('example-wrapper')}>
-    <SlidePanelManager ariaLabel="I am passing in an aria label">
+    <SlidePanelManager panelAriaLabel="I am passing in a panel aria label">
       <ContentComponent />
     </SlidePanelManager>
   </div>
