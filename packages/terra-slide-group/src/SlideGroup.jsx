@@ -19,6 +19,7 @@ const propTypes = {
    * When true, the transition between slides is animated.
    */
   isAnimated: PropTypes.bool,
+  slideAriaLabel: PropTypes.string,
 };
 
 const defaultProps = {
@@ -29,6 +30,7 @@ class SlideGroup extends React.Component {
   static hidePreviousSlide(enteredElement) {
     if (enteredElement.previousSibling) {
       enteredElement.previousSibling.setAttribute('aria-hidden', true);
+      enteredElement.parentNode.parentNode.parentNode.parentNode.parentNode.focus();
     }
   }
 
@@ -49,7 +51,12 @@ class SlideGroup extends React.Component {
   }
 
   render() {
-    const { items, isAnimated, ...customProps } = this.props;
+    const {
+      items,
+      isAnimated,
+      slideAriaLabel,
+      ...customProps
+    } = this.props;
     // We don't want to render the transition group when no children exist. Doing so will cause the first child to
     // animate into place, which in most cases we do not want.
     if (!items || !items.length) {
@@ -88,7 +95,7 @@ class SlideGroup extends React.Component {
             key={item.key}
             id="shmmoop"
           >
-            <Slide isHidden={index !== itemCount}>
+            <Slide isHidden={index !== itemCount} slideAriaLabel={slideAriaLabel}>
               {item}
             </Slide>
           </CSSTransition>

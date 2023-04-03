@@ -83,12 +83,11 @@ class SlidePanel extends React.Component {
     if (this.props.isOpen && this.props.isOpen !== prevProps.isOpen) {
       // Save the disclosing node for returning focus when panel is closed
       this.setDisclosingNode(this.lastClicked);
-      // this.panelNode.setAttribute('aria-description', 'Panel expanded');
       this.panelNode.focus();
     } else if (!this.props.isOpen && this.props.isOpen !== prevProps.isOpen) {
       // Return focus to the disclosing element
       this.disclosingNode.setAttribute('aria-expanded', 'false');
-      this.disclosingNode.setAttribute('aria-controls', 'panel-div');
+      this.disclosingNode.setAttribute('aria-controls', 'slide-panel-div');
       this.disclosingNode.focus();
     }
   }
@@ -103,7 +102,7 @@ class SlidePanel extends React.Component {
 
   setDisclosingNode(node) {
     node.setAttribute('aria-expanded', 'true');
-    node.setAttribute('aria-controls', 'panel-div');
+    node.setAttribute('aria-controls', 'slide-panel-div');
     this.disclosingNode = node;
   }
 
@@ -132,16 +131,46 @@ class SlidePanel extends React.Component {
       theme.className,
     ),
     customProps.className);
-    // role="alert" or region aria-live="polite" aria-roledescription="Panel expanded"
     const panelDiv = (
-      <div id="panel-div" role="region" className={cx(['panel'])} key="panel" tabIndex="-1" aria-label={panelAriaLabel || 'Panel expanded'} aria-hidden={!isOpen ? 'true' : 'false'} ref={this.setPanelNode}>
-        {panelContent}
-      </div>
+      <>
+        { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+        {/* <label
+          className={cx('hidden-label')}
+          htmlFor="slide-panel-div"
+          id="panel-div-label"
+        >
+          {panelAriaLabel || 'Panel expanded'}
+        </label> */}
+        <div
+          id="slide-panel-div"
+          role="region"
+          className={cx(['panel'])}
+          key="panel"
+          tabIndex="-1"
+          aria-label={panelAriaLabel || 'Panel expanded'}
+          aria-hidden={!isOpen ? 'true' : 'false'}
+          aria-describedby="slide-panel-div"
+          ref={this.setPanelNode}
+        >
+          {panelContent}
+        </div>
+      </>
     );
 
     const mainDiv = (
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-      <div id="main-div" className={cx('main')} key="main" tabIndex="-1" aria-label={mainAriaLabel} ref={this.mainNode} onClick={this.setLastClicked} onKeyUp={this.setLastClicked}>
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/no-noninteractive-element-interactions
+      <div
+        id="main-slide-panel-div"
+        role="main"
+        className={cx('main')}
+        key="main"
+        tabIndex="-1"
+        aria-label={mainAriaLabel}
+        aria-describedby="main-slide-panel-div"
+        ref={this.mainNode}
+        onClick={this.setLastClicked}
+        onKeyUp={this.setLastClicked}
+      >
         {mainContent}
       </div>
     );

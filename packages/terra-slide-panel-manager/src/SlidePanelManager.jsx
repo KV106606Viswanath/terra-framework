@@ -22,7 +22,7 @@ const propTypes = {
   /**
  * The aria label for the panel region.
   */
-  ariaLabel: PropTypes.string,
+  panelAriaLabel: PropTypes.string,
   /**
   * The aria label when returning to the main region.
   */
@@ -30,7 +30,6 @@ const propTypes = {
   /**
    * The component to render within the panel above the disclosed content.
    */
-
   disclosureAccessory: PropTypes.element,
   /**
    * @private
@@ -41,8 +40,7 @@ const propTypes = {
 
 const defaultProps = {
   panelBehavior: 'overlay',
-  mainAriaLabel: 'You are back in the main region',
-  // ariaLabel: 'default panel manager aria label',
+  mainAriaLabel: 'Default main aria label',
 };
 
 /**
@@ -64,17 +62,11 @@ const disclosureDimensionsToPanelSize = (dimensions) => {
   return 'small';
 };
 
-class SlidePanelManager extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.renderSlidePanel = this.renderSlidePanel.bind(this);
-  }
-
-  renderSlidePanel(manager) {
+function SlidePanelManager(props) {
+  const renderSlidePanel = (manager) => {
     const {
-      children, disclosureAccessory, withDisclosureContainer, ariaLabel, mainAriaLabel, ...customProps
-    } = this.props;
+      children, disclosureAccessory, withDisclosureContainer, panelAriaLabel, mainAriaLabel, ...customProps
+    } = props;
 
     let isFullscreen;
     if (manager.disclosure.size === availableDisclosureSizes.FULLSCREEN || manager.disclosure.isMaximized) {
@@ -94,13 +86,13 @@ class SlidePanelManager extends React.Component {
     const presentedDisclosureComponentData = manager.disclosureComponentData[presentedDisclosureComponentKey] || {};
     const headerDataForPresentedComponent = presentedDisclosureComponentData.headerAdapterData;
 
-    let ariaRegionMessage;
-    if (ariaLabel) {
-      ariaRegionMessage = ariaLabel;
+    let panelAriaRegionMessage;
+    if (panelAriaLabel) {
+      panelAriaRegionMessage = panelAriaLabel;
     } else if (headerDataForPresentedComponent && headerDataForPresentedComponent.title) {
-      ariaRegionMessage = headerDataForPresentedComponent.title;
+      panelAriaRegionMessage = headerDataForPresentedComponent.title;
     } else {
-      ariaRegionMessage = 'default panel manager aria label';
+      panelAriaRegionMessage = 'Default panel aria label';
     }
 
     return (
@@ -118,9 +110,10 @@ class SlidePanelManager extends React.Component {
               <React.Fragment>
                 {headerDataForPresentedComponent ? (
                   <ActionHeader
-                    title={headerDataForPresentedComponent.title}
+                    text={headerDataForPresentedComponent.title}
                     onClose={manager.closeDisclosure}
                     onBack={manager.disclosureComponentKeys.length > 1 ? manager.dismissPresentedComponent : undefined}
+                    level={2}
                   >
                     {headerDataForPresentedComponent.collapsibleMenuView}
                   </ActionHeader>
@@ -129,29 +122,25 @@ class SlidePanelManager extends React.Component {
               </React.Fragment>
             )}
           >
-            <SlideGroup items={manager.disclosure.components} isAnimated />
+            <SlideGroup slideAriaLabel={panelAriaRegionMessage} items={manager.disclosure.components} isAnimated />
           </ContentContainer>
         )}
-        panelAriaLabel={ariaRegionMessage}
+        panelAriaLabel={panelAriaRegionMessage}
         mainAriaLabel={mainAriaLabel}
         mainContent={manager.children.components}
       />
     );
-  }
+  };
 
-  render() {
-    const { withDisclosureContainer, children } = this.props;
-
-    return (
-      <DisclosureManager
-        withDisclosureContainer={withDisclosureContainer}
-        supportedDisclosureTypes={[disclosureType]}
-        render={this.renderSlidePanel}
-      >
-        {children}
-      </DisclosureManager>
-    );
-  }
+  return (
+    <DisclosureManager
+      withDisclosureContainer={props.withDisclosureContainer}
+      supportedDisclosureTypes={[disclosureType]}
+      render={renderSlidePanel}
+    >
+      {props.children}
+    </DisclosureManager>
+  );
 }
 
 SlidePanelManager.propTypes = propTypes;
