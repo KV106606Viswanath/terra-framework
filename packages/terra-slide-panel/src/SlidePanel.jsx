@@ -134,13 +134,13 @@ class SlidePanel extends React.Component {
     const panelDiv = (
       <>
         { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
-        {/* <label
+        <label
           className={cx('hidden-label')}
           htmlFor="slide-panel-div"
           id="panel-div-label"
         >
-          {panelAriaLabel || 'Panel expanded'}
-        </label> */}
+          {`${panelAriaLabel} region` || 'Panel expanded'}
+        </label>
         <div
           id="slide-panel-div"
           role="region"
@@ -149,7 +149,7 @@ class SlidePanel extends React.Component {
           tabIndex="-1"
           aria-label={panelAriaLabel || 'Panel expanded'}
           aria-hidden={!isOpen ? 'true' : 'false'}
-          aria-describedby="slide-panel-div"
+          aria-describedby="panel-div-label"
           ref={this.setPanelNode}
         >
           {panelContent}
@@ -166,7 +166,6 @@ class SlidePanel extends React.Component {
         key="main"
         tabIndex="-1"
         aria-label={mainAriaLabel}
-        aria-describedby="main-slide-panel-div"
         ref={this.mainNode}
         onClick={this.setLastClicked}
         onKeyUp={this.setLastClicked}
