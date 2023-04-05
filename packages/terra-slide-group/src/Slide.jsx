@@ -32,7 +32,7 @@ const Slide = (props) => {
   const [enteredAfterHidden, setEnteredAfterHidden] = useState(false);
 
   useEffect(() => {
-    if (!props.isHidden && lastClicked) {
+    if (!props.isHidden && lastClicked && lastClicked.focus) {
       setEnteredAfterHidden(true);
       lastClicked.focus();
     }
@@ -50,7 +50,7 @@ const Slide = (props) => {
     <div
       id="slide-div"
       role={enteredAfterHidden ? 'region' : undefined}
-      aria-label={enteredAfterHidden ? `${props.slideAriaLabel} inner panel div` : undefined}
+      aria-label={enteredAfterHidden ? `${props.slideAriaLabel}` : undefined}
       className={cx('slide', theme.className)}
       aria-hidden={props.isHidden || null}
       onClick={handleClick}

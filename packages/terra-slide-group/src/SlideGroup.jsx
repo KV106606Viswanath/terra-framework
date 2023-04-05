@@ -20,6 +20,7 @@ const propTypes = {
    */
   isAnimated: PropTypes.bool,
   slideAriaLabel: PropTypes.string,
+  handleFocus: PropTypes.func,
 };
 
 const defaultProps = {
@@ -27,22 +28,36 @@ const defaultProps = {
 };
 
 class SlideGroup extends React.Component {
-  static hidePreviousSlide(enteredElement) {
+  static hidePreviousSlide(enteredElement, handleFocus) {
     if (enteredElement.previousSibling) {
       enteredElement.previousSibling.setAttribute('aria-hidden', true);
-      enteredElement.parentNode.parentNode.parentNode.parentNode.parentNode.focus();
+      // enteredElement.parentNode.parentNode.parentNode.parentNode.parentNode.focus();
+      // const panelDiv = document.getElementById('slide-panel-div');
+      // if (panelDiv && panelDiv.focus) {
+      //   panelDiv.setAttribute('role', 'region');
+      // panelDiv.setAttribute('aria-live', 'polite');
+      // panelDiv.focus();
+      if (handleFocus) {
+        handleFocus();
+      }
+      // }
     }
   }
 
   static showPreviousSlide(exitingElement) {
     if (exitingElement.previousSibling) {
       exitingElement.previousSibling.removeAttribute('aria-hidden');
+      // const panelDiv = document.getElementById('slide-panel-div');
+      // if (panelDiv && panelDiv.focus) {
+      //   panelDiv.removeAttribute('polite');
+      // }
     }
   }
 
   constructor(props) {
     super(props);
     this.setContainer = this.setContainer.bind(this);
+    console.log(props);
   }
 
   setContainer(node) {
@@ -55,6 +70,7 @@ class SlideGroup extends React.Component {
       items,
       isAnimated,
       slideAriaLabel,
+      handleFocus,
       ...customProps
     } = this.props;
     // We don't want to render the transition group when no children exist. Doing so will cause the first child to
@@ -84,22 +100,25 @@ class SlideGroup extends React.Component {
 
     return (
       <TransitionGroup {...customProps} ref={this.setContainer} className={slideGroupClass} key={transitionGroupKey}>
-        {items.map((item, index) => (
-          <CSSTransition
-            classNames={transitionNames}
-            enter={isAnimated}
-            onEntered={SlideGroup.hidePreviousSlide}
-            exit={isAnimated}
-            onExit={SlideGroup.showPreviousSlide}
-            timeout={300}
-            key={item.key}
-            id="shmmoop"
-          >
-            <Slide isHidden={index !== itemCount} slideAriaLabel={slideAriaLabel}>
-              {item}
-            </Slide>
-          </CSSTransition>
-        ))}
+        {items.map((item, index) => {
+          console.log(item);
+          return (
+            <CSSTransition
+              classNames={transitionNames}
+              enter={isAnimated}
+              onEntered={(element) => SlideGroup.hidePreviousSlide(element, handleFocus)}
+              exit={isAnimated}
+              onExit={SlideGroup.showPreviousSlide}
+              timeout={300}
+              key={item.key}
+              id="shmmoop"
+            >
+              <Slide isHidden={index !== itemCount} slideAriaLabel={slideAriaLabel}>
+                {item}
+              </Slide>
+            </CSSTransition>
+          );
+        })}
       </TransitionGroup>
     );
   }

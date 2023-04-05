@@ -64,6 +64,14 @@ class DisclosureComponent extends React.Component {
                 text="Button 1"
                 key="button_1"
                 onClick={() => {
+                  disclosureManager.disclose({
+                    preferredType: disclosureType,
+                    size: 'small',
+                    content: {
+                      key: `Nested ${name}`,
+                      component: <DisclosureComponent name={`Nested ${name}`} disclosureType={disclosureType} />,
+                    },
+                  });
                   this.setState({
                     selectedHeaderAction: 'Button 1',
                   });
@@ -247,7 +255,7 @@ class ContentComponent extends React.Component {
       <ContentContainer
         header={(
           <ActionHeader
-            title="SlidePanelManager Child Component"
+            text="SlidePanelManager Child Component"
           />
         )}
       >
@@ -266,6 +274,15 @@ class ContentComponent extends React.Component {
         <div className={cx('content-wrapper')}>
           {this.renderForm()}
           {this.renderFormButton()}
+          <button
+            type="button"
+            onClick={() => {
+              const panelDiv = document.getElementById('slide-panel-div');
+              panelDiv.focus();
+            }}
+          >
+            Focus panel
+          </button>
         </div>
       </ContentContainer>
     );

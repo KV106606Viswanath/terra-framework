@@ -247,7 +247,7 @@ class ContentComponent extends React.Component {
       <ContentContainer
         header={(
           <ActionHeader
-            title="SlidePanelManager Child Component"
+            text="SlidePanelManager Child Component"
           />
         )}
       >

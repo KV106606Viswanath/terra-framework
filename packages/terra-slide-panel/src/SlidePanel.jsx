@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import classNamesBind from 'classnames/bind';
 import ThemeContext from 'terra-theme-context';
+import VisuallyHiddenText from 'terra-visually-hidden-text';
+import FocusTrap from 'focus-trap-react';
 import styles from './SlidePanel.module.scss';
 
 const cx = classNamesBind.bind(styles);
@@ -86,9 +88,11 @@ class SlidePanel extends React.Component {
       this.panelNode.focus();
     } else if (!this.props.isOpen && this.props.isOpen !== prevProps.isOpen) {
       // Return focus to the disclosing element
-      this.disclosingNode.setAttribute('aria-expanded', 'false');
-      this.disclosingNode.setAttribute('aria-controls', 'slide-panel-div');
-      this.disclosingNode.focus();
+      if (this.disclosingNode && this.disclosingNode.focus) {
+        this.disclosingNode.setAttribute('aria-expanded', 'false');
+        this.disclosingNode.setAttribute('aria-controls', 'slide-panel-div');
+        this.disclosingNode.focus();
+      }
     }
   }
 
@@ -134,26 +138,47 @@ class SlidePanel extends React.Component {
     const panelDiv = (
       <>
         { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
-        <label
+        {/* <label
           className={cx('hidden-label')}
           htmlFor="slide-panel-div"
           id="panel-div-label"
         >
           {`${panelAriaLabel} region` || 'Panel expanded'}
-        </label>
+        </label> */}
+        {/* <FocusTrap
+          active={isOpen}
+          focusTrapOptions={{
+            escapeDeactivates: true,
+            clickOutsideDeactivates: true,
+            returnFocusOnDeactivate: false,
+          }}
+        > */}
+        {/* <div
+          className={cx('hidden-label')}
+          id="a11y-panel-aria"
+          aria-live="polite"
+        >
+          {`${panelAriaLabel} region` || 'Panel expanded'}
+        </div> */}
         <div
           id="slide-panel-div"
-          role="region"
+          role="complementary"
+          // aria-modal="true"
           className={cx(['panel'])}
           key="panel"
           tabIndex="-1"
-          aria-label={panelAriaLabel || 'Panel expanded'}
+          aria-labelledby="panel-hidden-text"
           aria-hidden={!isOpen ? 'true' : 'false'}
-          aria-describedby="panel-div-label"
+          // aria-describedby="slide-panel-manager-action-header"
           ref={this.setPanelNode}
         >
+          <VisuallyHiddenText
+            id="panel-hidden-text"
+            text={panelAriaLabel}
+          />
           {panelContent}
         </div>
+        {/* </FocusTrap> */}
       </>
     );
 
@@ -176,13 +201,35 @@ class SlidePanel extends React.Component {
 
     const content = (panelPosition === SlidePanelPositions.START) ? (
       <React.Fragment>
-        {panelDiv}
+        {isFullscreen ? (
+          <FocusTrap
+            active={isOpen}
+            focusTrapOptions={{
+              escapeDeactivates: true,
+              clickOutsideDeactivates: true,
+              returnFocusOnDeactivate: false,
+            }}
+          >
+            <div>{panelDiv}</div>
+          </FocusTrap>
+        ) : panelDiv}
         {mainDiv}
       </React.Fragment>
     ) : (
       <React.Fragment>
         {mainDiv}
-        {panelDiv}
+        {isFullscreen ? (
+          <FocusTrap
+            active={isOpen}
+            focusTrapOptions={{
+              escapeDeactivates: true,
+              clickOutsideDeactivates: true,
+              returnFocusOnDeactivate: false,
+            }}
+          >
+            <div>{panelDiv}</div>
+          </FocusTrap>
+        ) : panelDiv}
       </React.Fragment>
     );
 

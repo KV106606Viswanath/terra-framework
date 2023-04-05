@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, useRef } from 'react';
 import PropTypes from 'prop-types';
 import ActionHeader from 'terra-action-header';
 import ContentContainer from 'terra-content-container';
@@ -63,6 +63,41 @@ const disclosureDimensionsToPanelSize = (dimensions) => {
 };
 
 function SlidePanelManager(props) {
+  const panelRef = useRef(null);
+
+  const handleFocus = () => {
+    console.log(panelRef.current);
+    panelRef?.current?.focus();
+  };
+
+  const PanelContainer = React.forwardRef((panelContainerProps, ref) => {
+    console.log(ref);
+    return (
+      <span ref={ref} tabIndex="-1">
+        <ContentContainer
+          fill
+          header={(
+            <React.Fragment>
+              {panelContainerProps.headerDataForPresentedComponent ? (
+                <ActionHeader
+                  text={panelContainerProps.headerDataForPresentedComponent.title}
+                  onClose={panelContainerProps.manager.closeDisclosure}
+                  onBack={panelContainerProps.manager.disclosureComponentKeys.length > 1 ? panelContainerProps.manager.dismissPresentedComponent : undefined}
+                  level={2}
+                >
+                  {panelContainerProps.headerDataForPresentedComponent.collapsibleMenuView}
+                </ActionHeader>
+              ) : undefined}
+              {panelContainerProps.disclosureAccessory}
+            </React.Fragment>
+          )}
+        >
+          <SlideGroup slideAriaLabel={panelContainerProps.panelAriaRegionMessage} items={panelContainerProps.manager.disclosure.components} isAnimated handleFocus={handleFocus} />
+        </ContentContainer>
+      </span>
+    );
+  });
+
   const renderSlidePanel = (manager) => {
     const {
       children, disclosureAccessory, withDisclosureContainer, panelAriaLabel, mainAriaLabel, ...customProps
@@ -87,10 +122,10 @@ function SlidePanelManager(props) {
     const headerDataForPresentedComponent = presentedDisclosureComponentData.headerAdapterData;
 
     let panelAriaRegionMessage;
-    if (panelAriaLabel) {
-      panelAriaRegionMessage = panelAriaLabel;
-    } else if (headerDataForPresentedComponent && headerDataForPresentedComponent.title) {
+    if (headerDataForPresentedComponent && headerDataForPresentedComponent.title) {
       panelAriaRegionMessage = headerDataForPresentedComponent.title;
+    } else if (panelAriaLabel) {
+      panelAriaRegionMessage = panelAriaLabel;
     } else {
       panelAriaRegionMessage = 'Default panel aria label';
     }
@@ -104,26 +139,33 @@ function SlidePanelManager(props) {
         panelSize={panelSize}
         isOpen={manager.disclosure.isOpen}
         panelContent={(
-          <ContentContainer
-            fill
-            header={(
-              <React.Fragment>
-                {headerDataForPresentedComponent ? (
-                  <ActionHeader
-                    text={headerDataForPresentedComponent.title}
-                    onClose={manager.closeDisclosure}
-                    onBack={manager.disclosureComponentKeys.length > 1 ? manager.dismissPresentedComponent : undefined}
-                    level={2}
-                  >
-                    {headerDataForPresentedComponent.collapsibleMenuView}
-                  </ActionHeader>
-                ) : undefined}
-                {disclosureAccessory}
-              </React.Fragment>
-            )}
-          >
-            <SlideGroup slideAriaLabel={panelAriaRegionMessage} items={manager.disclosure.components} isAnimated />
-          </ContentContainer>
+          <PanelContainer
+            ref={panelRef}
+            headerDataForPresentedComponent={headerDataForPresentedComponent}
+            manager={manager}
+            disclosureAccessory={disclosureAccessory}
+            panelAriaRegionMessage={panelAriaRegionMessage}
+          />
+          // <ContentContainer
+          //   fill
+          //   header={(
+          //     <React.Fragment>
+          //       {headerDataForPresentedComponent ? (
+          //         <ActionHeader
+          //           text={headerDataForPresentedComponent.title}
+          //           onClose={manager.closeDisclosure}
+          //           onBack={manager.disclosureComponentKeys.length > 1 ? manager.dismissPresentedComponent : undefined}
+          //           level={2}
+          //         >
+          //           {headerDataForPresentedComponent.collapsibleMenuView}
+          //         </ActionHeader>
+          //       ) : undefined}
+          //       {disclosureAccessory}
+          //     </React.Fragment>
+          //   )}
+          // >
+          //   <SlideGroup slideAriaLabel={panelAriaRegionMessage} items={manager.disclosure.components} isAnimated />
+          // </ContentContainer>
         )}
         panelAriaLabel={panelAriaRegionMessage}
         mainAriaLabel={mainAriaLabel}
@@ -131,6 +173,8 @@ function SlidePanelManager(props) {
       />
     );
   };
+
+  console.log(panelRef);
 
   return (
     <DisclosureManager
