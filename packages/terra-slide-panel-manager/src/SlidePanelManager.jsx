@@ -67,7 +67,8 @@ function SlidePanelManager(props) {
 
   const handleFocus = () => {
     console.log(panelRef.current);
-    panelRef?.current?.focus();
+    console.log(panelRef.current.parentNode);
+    panelRef?.current?.parentNode?.focus();
   };
 
   const PanelContainer = React.forwardRef((panelContainerProps, ref) => {

@@ -162,7 +162,7 @@ class SlidePanel extends React.Component {
         </div> */}
         <div
           id="slide-panel-div"
-          role="complementary"
+          role="region"
           // aria-modal="true"
           className={cx(['panel'])}
           key="panel"
