@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Changed
+  * Updated WDIO screenshots due to terra-menu changes
+
 ## 6.66.0 - (March 29, 2023)
 
 * Changed
