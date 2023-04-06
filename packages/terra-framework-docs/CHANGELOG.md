@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Updated
+  * Updated examples for `terra-menu`
+
 ## 1.18.0 - (April 5, 2023)
 
 * Changed
