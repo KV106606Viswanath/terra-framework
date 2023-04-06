@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Updated
+  * Updated Jest snapshot due to `terra-menu` changes
+
 ## 6.66.0 - (April 5, 2023)
 
 * Added
