@@ -19,6 +19,17 @@ const propTypes = {
    * When true, the transition between slides is animated.
    */
   isAnimated: PropTypes.bool,
+  /**
+   * Ref of the node to focus when a new Slide is rendered.
+   *
+   * Generally this should be the Slide or the parent node of the Slide in order
+   * to make the Slide more accessible for keyboard only users and assistive technologies.
+   */
+  focusRef: PropTypes.instanceOf(Element),
+  /**
+   * The aria label for the Slides in the group.
+   */
+  slideAriaLabel: PropTypes.string,
 };
 
 const defaultProps = {
@@ -49,7 +60,13 @@ class SlideGroup extends React.Component {
   }
 
   render() {
-    const { items, isAnimated, ...customProps } = this.props;
+    const {
+      items,
+      isAnimated,
+      focusRef,
+      slideAriaLabel,
+      ...customProps
+    } = this.props;
     // We don't want to render the transition group when no children exist. Doing so will cause the first child to
     // animate into place, which in most cases we do not want.
     if (!items || !items.length) {
@@ -75,8 +92,6 @@ class SlideGroup extends React.Component {
     ),
     customProps.className);
 
-    console.log(this.props);
-
     return (
       <TransitionGroup {...customProps} ref={this.setContainer} className={slideGroupClass} key={transitionGroupKey}>
         {items.map((item, index) => (
@@ -90,7 +105,7 @@ class SlideGroup extends React.Component {
             key={item.key}
             id="shmmoop"
           >
-            <Slide isHidden={index !== itemCount} focusRef={this.props.focusRef}>
+            <Slide isHidden={index !== itemCount} focusRef={focusRef} slideAriaLabel={slideAriaLabel}>
               {item}
             </Slide>
           </CSSTransition>

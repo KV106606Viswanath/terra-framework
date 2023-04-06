@@ -82,7 +82,7 @@ class SlidePanelManager extends React.Component {
 
   renderSlidePanel(manager) {
     const {
-      children, level, disclosureAccessory, withDisclosureContainer, ...customProps
+      children, level, disclosureAccessory, withDisclosureContainer, panelAriaLabel, ...customProps
     } = this.props;
 
     let isFullscreen;
@@ -131,10 +131,10 @@ class SlidePanelManager extends React.Component {
               </React.Fragment>
             )}
           >
-            <SlideGroup items={manager.disclosure.components} isAnimated focusRef={this.slidePanel} />
+            <SlideGroup items={manager.disclosure.components} isAnimated focusRef={this.slidePanel} slideAriaLabel={headerDataForPresentedComponent?.title || panelAriaLabel} />
           </ContentContainer>
         )}
-        panelAriaLabel={headerDataForPresentedComponent?.title || "TEST ARIA LABEL"}
+        panelAriaLabel={headerDataForPresentedComponent?.title || panelAriaLabel}
         mainContent={manager.children.components}
       />
     );

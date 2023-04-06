@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import classNamesBind from 'classnames/bind';
 import ThemeContext from 'terra-theme-context';
 import VisuallyHiddenText from 'terra-visually-hidden-text';
-import { breakpointIsActiveForSize } from 'terra-breakpoints';
 import styles from './SlidePanel.module.scss';
 
 const cx = classNamesBind.bind(styles);
@@ -126,6 +125,7 @@ class SlidePanel extends React.Component {
       isFullscreen,
       isOpen,
       fill,
+      setSlidePanelRef,
       ...customProps
     } = this.props;
 
