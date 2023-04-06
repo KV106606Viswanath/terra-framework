@@ -113,6 +113,7 @@
     @media (min-width: 768px), print {
       > .main {
         background-color: var(--terra-slide-panel-main-squish-background-color, #fff);
+        pointer-events: none;
       }
 
       &[data-slide-panel-panel-size='small'] > .main {

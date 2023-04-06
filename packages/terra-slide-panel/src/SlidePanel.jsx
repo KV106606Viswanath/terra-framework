@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import classNamesBind from 'classnames/bind';
 import ThemeContext from 'terra-theme-context';
+import VisuallyHiddenText from 'terra-visually-hidden-text';
+import { breakpointIsActiveForSize } from 'terra-breakpoints';
 import styles from './SlidePanel.module.scss';
 
 const cx = classNamesBind.bind(styles);
@@ -62,6 +64,11 @@ const propTypes = {
    * Whether or not the SlidePanel should be sized relative to its parent container.
    */
   fill: PropTypes.bool,
+
+  /**
+   * Callback function to set the slide panel ref.
+   */
+  setSlidePanelRef: PropTypes.func,
 };
 
 const defaultProps = {
@@ -86,11 +93,15 @@ class SlidePanel extends React.Component {
       this.panelNode.focus();
     } else if (!this.props.isOpen && this.props.isOpen !== prevProps.isOpen) {
       // Return focus to the disclosing element
+      this.disclosingNode.setAttribute('aria-expanded', 'false');
       this.disclosingNode.focus();
     }
   }
 
   setPanelNode(node) {
+    if (this.props.setSlidePanelRef) {
+      this.props.setSlidePanelRef(node);
+    }
     this.panelNode = node;
   }
 
@@ -99,6 +110,7 @@ class SlidePanel extends React.Component {
   }
 
   setDisclosingNode(node) {
+    node.setAttribute('aria-expanded', 'true');
     this.disclosingNode = node;
   }
 
@@ -129,14 +141,35 @@ class SlidePanel extends React.Component {
     customProps.className);
 
     const panelDiv = (
-      <div className={cx(['panel'])} key="panel" tabIndex="-1" aria-label={panelAriaLabel} aria-hidden={!isOpen ? 'true' : 'false'} ref={this.setPanelNode}>
+      <div
+        className={cx(['panel'])}
+        key="panel"
+        tabIndex="-1"
+        aria-labelledby="panel-hidden-text"
+        aria-hidden={!isOpen ? 'true' : 'false'}
+        role="region"
+        ref={this.setPanelNode}
+      >
+        <VisuallyHiddenText
+          id="panel-hidden-text"
+          text={`${panelAriaLabel}`}
+        />
         {panelContent}
       </div>
     );
 
     const mainDiv = (
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-      <div className={cx('main')} key="main" tabIndex="-1" aria-label={mainAriaLabel} ref={this.mainNode} onClick={this.setLastClicked} onKeyUp={this.setLastClicked}>
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/no-noninteractive-element-interactions
+      <div
+        className={cx('main')}
+        key="main"
+        tabIndex="-1"
+        aria-label={mainAriaLabel}
+        ref={this.mainNode}
+        role="main"
+        onClick={this.setLastClicked}
+        onKeyUp={this.setLastClicked}
+      >
         {mainContent}
       </div>
     );

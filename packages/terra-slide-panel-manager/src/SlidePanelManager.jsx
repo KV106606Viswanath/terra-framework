@@ -33,11 +33,20 @@ const propTypes = {
    * The container to wrap the disclosed content. This should be provided from the application level.
    */
   withDisclosureContainer: PropTypes.func,
+  /**
+    * The aria label for the panel region. // TODO default?
+    */
+  panelAriaLabel: PropTypes.string,
+  /**
+    * The aria label when returning to the main region. // TODO default?
+    */
+  mainAriaLabel: PropTypes.string,
 };
 
 const defaultProps = {
   level: 2,
   panelBehavior: 'overlay',
+  mainAriaLabel: 'This region contains items that can open new regions',
 };
 
 /**
@@ -64,6 +73,11 @@ class SlidePanelManager extends React.Component {
     super(props);
 
     this.renderSlidePanel = this.renderSlidePanel.bind(this);
+    this.setSlidePanel = this.setSlidePanel.bind(this);
+  }
+
+  setSlidePanel(node) {
+    this.slidePanel = node;
   }
 
   renderSlidePanel(manager) {
@@ -97,6 +111,7 @@ class SlidePanelManager extends React.Component {
         isFullscreen={isFullscreen}
         panelSize={panelSize}
         isOpen={manager.disclosure.isOpen}
+        setSlidePanelRef={this.setSlidePanel}
         panelContent={(
           <ContentContainer
             fill
@@ -116,9 +131,10 @@ class SlidePanelManager extends React.Component {
               </React.Fragment>
             )}
           >
-            <SlideGroup items={manager.disclosure.components} isAnimated />
+            <SlideGroup items={manager.disclosure.components} isAnimated focusRef={this.slidePanel} />
           </ContentContainer>
         )}
+        panelAriaLabel={headerDataForPresentedComponent?.title || "TEST ARIA LABEL"}
         mainContent={manager.children.components}
       />
     );
@@ -126,7 +142,6 @@ class SlidePanelManager extends React.Component {
 
   render() {
     const { withDisclosureContainer, children } = this.props;
-
     return (
       <DisclosureManager
         withDisclosureContainer={withDisclosureContainer}

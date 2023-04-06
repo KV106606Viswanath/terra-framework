@@ -75,6 +75,8 @@ class SlideGroup extends React.Component {
     ),
     customProps.className);
 
+    console.log(this.props);
+
     return (
       <TransitionGroup {...customProps} ref={this.setContainer} className={slideGroupClass} key={transitionGroupKey}>
         {items.map((item, index) => (
@@ -88,7 +90,7 @@ class SlideGroup extends React.Component {
             key={item.key}
             id="shmmoop"
           >
-            <Slide isHidden={index !== itemCount}>
+            <Slide isHidden={index !== itemCount} focusRef={this.props.focusRef}>
               {item}
             </Slide>
           </CSSTransition>

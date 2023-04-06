@@ -29,7 +29,14 @@ const Slide = (props) => {
     if (!props.isHidden && lastClicked) {
       lastClicked.focus();
     }
-  });
+  }, [props.isHidden]);
+
+  useEffect(() => {
+    if (props.focusRef && props.focusRef.focus) {
+      props.focusRef.focus();
+      console.log('Slide focus ref', props.focusRef);
+    };
+  }, [props.focusRef]);
 
   const handleClick = (event) => {
     setLastClicked(event.target);
