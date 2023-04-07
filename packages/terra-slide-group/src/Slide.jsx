@@ -58,8 +58,7 @@ const Slide = ({
     if (!isHidden && focusRef && focusRef.focus) {
       focusRef.focus();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusRef]);
+  }, [focusRef, isHidden]);
 
   const handleClick = (event) => {
     setLastClicked(event.target);
