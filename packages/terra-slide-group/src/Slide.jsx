@@ -18,7 +18,6 @@ const propTypes = {
   children: PropTypes.node,
 
   /**
-   * @private
    * Ref of the node to focus when the Slide is rendered.
    *
    * Generally this should be the Slide or the parent node of the Slide in order
@@ -50,17 +49,14 @@ const Slide = ({
     if (!isHidden && lastClicked) {
       setEnteredAfterHidden(true);
       lastClicked.focus();
+    } else if (!isHidden && focusRef && focusRef.focus) {
+      focusRef.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHidden]);
 
-  useEffect(() => {
-    if (!isHidden && focusRef && focusRef.focus) {
-      focusRef.focus();
-    }
-  }, [focusRef, isHidden]);
-
   const handleClick = (event) => {
+    setEnteredAfterHidden(false);
     setLastClicked(event.target);
   };
 
