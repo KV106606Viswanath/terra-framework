@@ -65,6 +65,7 @@ const propTypes = {
   fill: PropTypes.bool,
 
   /**
+   * @private
    * Callback function to set the slide panel ref.
    */
   setSlidePanelRef: PropTypes.func,
@@ -152,7 +153,7 @@ class SlidePanel extends React.Component {
       >
         <VisuallyHiddenText
           id="panel-hidden-text"
-          text={`${panelAriaLabel}`}
+          text={panelAriaLabel}
         />
         {panelContent}
       </div>

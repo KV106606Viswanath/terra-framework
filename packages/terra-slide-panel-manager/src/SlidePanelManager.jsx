@@ -119,7 +119,7 @@ class SlidePanelManager extends React.Component {
               <React.Fragment>
                 {headerDataForPresentedComponent ? (
                   <ActionHeader
-                    title={headerDataForPresentedComponent.title}
+                    text={headerDataForPresentedComponent.title}
                     onClose={manager.closeDisclosure}
                     level={level}
                     onBack={manager.disclosureComponentKeys.length > 1 ? manager.dismissPresentedComponent : undefined}

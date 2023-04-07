@@ -18,6 +18,7 @@ const propTypes = {
   children: PropTypes.node,
 
   /**
+   * @private
    * Ref of the node to focus when the Slide is rendered.
    *
    * Generally this should be the Slide or the parent node of the Slide in order
@@ -42,6 +43,7 @@ const Slide = ({
   slideAriaLabel,
 }) => {
   const [lastClicked, setLastClicked] = useState(null);
+  // used for assistive technology to provide context when returning to the slide
   const [enteredAfterHidden, setEnteredAfterHidden] = useState(false);
 
   useEffect(() => {
@@ -53,9 +55,10 @@ const Slide = ({
   }, [isHidden]);
 
   useEffect(() => {
-    if (focusRef && focusRef.focus) {
+    if (!isHidden && focusRef && focusRef.focus) {
       focusRef.focus();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusRef]);
 
   const handleClick = (event) => {

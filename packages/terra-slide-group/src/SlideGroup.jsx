@@ -20,6 +20,7 @@ const propTypes = {
    */
   isAnimated: PropTypes.bool,
   /**
+   * @private
    * Ref of the node to focus when a new Slide is rendered.
    *
    * Generally this should be the Slide or the parent node of the Slide in order
@@ -27,6 +28,7 @@ const propTypes = {
    */
   focusRef: PropTypes.instanceOf(Element),
   /**
+   * @private
    * The aria label for the Slides in the group.
    */
   slideAriaLabel: PropTypes.string,
